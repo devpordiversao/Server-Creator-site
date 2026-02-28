@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServerCreator Bot - Configure servidores Discord em segundos</title>
+    <meta name="description" content="Bot profissional para configurar servidores Discord completos com temas automatizados. RPG, Loja, Comunidade, Jogos, Estudos e Anime.">
+    
+    <!-- Open Graph / Discord Embed -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="ServerCreator Bot">
+    <meta property="og:description" content="Configure servidores Discord profissionais em segundos com temas automatizados">
+    <meta property="og:image" content="https://cdn.discordapp.com/attachments/.../banner.png">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --accent: #f093fb;
+            --dark: #1a1a2e;
+            --light: #ffffff;
+            --gray: #a0a0a0;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(-45deg, #1a1a2e, #16213e, #0f3460, #533483);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Floating Shapes */
+        .shapes {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .shape {
+            position: absolute;
+            filter: blur(50px);
+            opacity: 0.5;
+            animation: float 20s infinite;
+        }
+        
+        .shape:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            background: var(--primary);
+            top: -100px;
+            left: -100px;
+            border-radius: 50%;
+            animation-delay: 0s;
+        }
+        
+        .shape:nth-child(2) {
+            width: 300px;
+            height: 300px;
+            background: var(--accent);
+            bottom: -50px;
+            right: -50px;
+            border-radius: 50%;
+            animation-delay: 5s;
+        }
+        
+        .shape:nth-child(3) {
+            width: 200px;
+            height: 200px;
+            background: var(--secondary);
+            top: 50%;
+            left: 50%;
+            border-radius: 50%;
+            animation-delay: 10s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(26, 26, 46, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: var(--light);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 5% 5rem;
+            text-align: center;
+        }
+        
+        .hero-content {
+            max-width: 900px;
+            animation: fadeInUp 1s ease;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid var(--primary);
+            border-radius: 50px;
+            font-size: 0.875rem;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(102, 126, 234, 0); }
+        }
+        
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--light) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--gray);
+            margin-bottom: 3rem;
+            line-height: 1.6;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+        }
+        
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.5);
+        }
+        
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-3px);
+        }
+        
+        /* Stats */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 6rem 5%;
+            background: rgba(0,0,0,0.3);
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 4rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.08);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+        
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature-desc {
+            color: var(--gray);
+            line-height: 1.6;
+        }
+        
+        /* Themes Section */
+        .themes {
+            padding: 6rem 5%;
+            text-align: center;
+        }
+        
+        .themes-grid {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            max-width: 1000px;
+            margin: 3rem auto 0;
+        }
+        
+        .theme-tag {
+            padding: 1rem 1.5rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        
+        .theme-tag:hover {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+        
+        /* Developer Section */
+        .developer {
+            padding: 4rem 5%;
+            background: rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        
+        .dev-card {
+            display: inline-flex;
+            align-items: center;
+            gap: 1.5rem;
+            background: rgba(255,255,255,0.05);
+            padding: 2rem 3rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .dev-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 800;
+        }
+        
+        .dev-info {
+            text-align: left;
+        }
+        
+        .dev-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .dev-role {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 3rem 5%;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.5);
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+        
+        .copyright {
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+        
+        .dev-credit {
+            margin-top: 1rem;
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+        
+        .dev-credit a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .stats {
+                gap: 2rem;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+            
+            .dev-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 1.5rem;
+            }
+            
+            .dev-info {
+                text-align: center;
+            }
+        }
+        
+        /* Scroll Animation */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+        
+        .scroll-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="bg-animation"></div>
+    
+    <!-- Floating Shapes -->
+    <div class="shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <i class="fas fa-robot"></i>
+            ServerCreator
+        </div>
+        <ul class="nav-links">
+            <li><a href="#features">Recursos</a></li>
+            <li><a href="#themes">Temas</a></li>
+            <li><a href="termos.html">Termos</a></li>
+            <li><a href="privacidade.html">Privacidade</a></li>
+        </ul>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="badge">
+                <i class="fas fa-bolt"></i>
+                Configuração em segundos
+            </div>
+            
+            <h1>Configure servidores Discord como um profissional</h1>
+            
+            <p class="subtitle">
+                Crie servidores completos com canais, cargos e permissões automaticamente. 
+                Escolha entre 6 temas profissionais e deixe o bot fazer o trabalho pesado.
+            </p>
+            
+            <div class="cta-buttons">
+                <a href="https://discord.com/oauth2/authorize?client_id=1432518790226378965&permissions=8&integration_type=0&scope=bot" class="btn btn-primary">
+                    <i class="fab fa-discord"></i>
+                    Adicionar ao Discord
+                </a>
+                <a href="#features" class="btn btn-secondary">
+                    <i class="fas fa-arrow-down"></i>
+                    Saiba mais
+                </a>
+            </div>
+            
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number">24+</div>
+                    <div class="stat-label">Canais de Texto</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">Canais de Voz</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">22</div>
+                    <div class="stat-label">Cargos</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">Temas</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2 class="section-title scroll-reveal">✨ O que o bot faz por você</h2>
+        
+        <div class="features-grid">
+            <div class="feature-card scroll-reveal">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">Configuração Instantânea</h3>
+                <p class="feature-desc">Configure servidores completos em segundos com um único comando. Sem trabalho manual, sem erros.</p>
+            </div>
+            
+            <div class="feature-card scroll-reveal">
+                <div class="feature-icon">🎨</div>
+                <h3 class="feature-title">Temas Profissionais</h3>
+                <p class="feature-desc">6 temas completos: RPG, Loja, Comunidade, Jogos, Estudos e Anime. Cada um com canais e cargos específicos.</p>
+            </div>
+            
+            <div class="feature-card scroll-reveal">
+                <div class="feature-icon">🤖</div>
+                <h3 class="feature-title">Boas-vindas Automáticas</h3>
+                <p class="feature-desc">Sistema automático de boas-vindas e saída personalizado para cada tema, com mensagens e imagens.</p>
+            </div>
+            
+            <div class="feature-card scroll-reveal">
+                <div class="feature-icon">🛡️</div>
+                <h3 class="feature-title">Segurança Total</h3>
+                <p class="feature-desc">Apenas administradores podem usar comandos de configuração. Seus dados nunca são armazenados.</p>
+            </div>
+            
+            <div class="feature-card scroll-reveal">
+                <div class="feature-icon">🎯</div>
+                <h3 class="feature-title">Cargos Hierárquicos</h3>
+                <p class="feature-desc">22 cargos pré-configurados com permissões específicas, desde iniciante até administrador.</p>
+            </div>
+            
+            <div class="feature-card scroll-reveal">
+                <div class="feature-icon">🔄</div>
+                <h3 class="feature-title">Fácil de Reconfigurar</h3>
+                <p class="feature-desc">Quer mudar de tema? Use o comando de limpeza e configure novamente em segundos.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Themes Section -->
+    <section class="themes" id="themes">
+        <h2 class="section-title scroll-reveal">🎭 Escolha seu tema</h2>
+        
+        <div class="themes-grid scroll-reveal">
+            <div class="theme-tag">🎲 RPG</div>
+            <div class="theme-tag">🛒 Loja</div>
+            <div class="theme-tag">🌐 Comunidade</div>
+            <div class="theme-tag">🎮 Jogos</div>
+            <div class="theme-tag">📚 Estudos</div>
+            <div class="theme-tag">🍥 Anime</div>
+        </div>
+    </section>
+    
+    <!-- Developer Section -->
+    <section class="developer scroll-reveal">
+        <h2 class="section-title" style="margin-bottom: 2rem;">👨‍💻 Desenvolvedor</h2>
+        <div class="dev-card">
+            <div class="dev-avatar">A</div>
+            <div class="dev-info">
+                <div class="dev-name">Aeth</div>
+                <div class="dev-role">Desenvolvedor & Criador do ServerCreator Bot</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-links">
+            <a href="termos.html">
+                <i class="fas fa-file-contract"></i>
+                Termos de Serviço
+            </a>
+            <a href="privacidade.html">
+                <i class="fas fa-shield-alt"></i>
+                Política de Privacidade
+            </a>
+            <a href="https://discord.com/users/1327679436128129159" target="_blank">
+                <i class="fab fa-discord"></i>
+                Contato
+            </a>
+        </div>
+        
+        <p class="copyright">
+            © 2026 ServerCreator Bot. Todos os direitos reservados. 
+            Não afiliado ao Discord Inc.
+        </p>
+        
+        <p class="dev-credit">
+            Desenvolvido com 🩵 por  <a href="https://discord.com/users/1327679436128129159" target="_blank">Aeth</a>
+        </p>
+    </footer>
+    
+    <!-- Scroll Animation Script -->
+    <script>
+        // Animate elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.scroll-reveal').forEach((el) => observer.observe(el));
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
